@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0fr9mxs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <bpmn:process id="ParentProcess" name="Parent Process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:extensionElements>
+        <camunda:formData businessKey="BusKey">
+          <camunda:formField id="Iterations" label="How Many Times Should we Run the Sub Process" type="long" />
+          <camunda:formField id="BusKey" label="Enter The Business Key for the Instance" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_1fp17al</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1fp17al" sourceRef="StartEvent_1" targetRef="say-hello" />
+    <bpmn:endEvent id="EndEvent_0x6ir2l">
+      <bpmn:incoming>SequenceFlow_16gzt2m</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_16gzt2m" sourceRef="say-hello" targetRef="EndEvent_0x6ir2l" />
+    <bpmn:callActivity id="say-hello" name="Call Subprocess" calledElement="SubProcess">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1fp17al</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_16gzt2m</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics>
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">#{Iterations}</bpmn:loopCardinality>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:callActivity>
+    <bpmn:boundaryEvent id="Event_0l1dgjz" name="Graceful Shutdown" cancelActivity="false" attachedToRef="say-hello">
+      <bpmn:outgoing>Flow_1vifmww</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0kjz39n" messageRef="Message_1ehanv5" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1vifmww" sourceRef="Event_0l1dgjz" targetRef="Event_1h0rlom" />
+    <bpmn:sequenceFlow id="Flow_1fkinki" sourceRef="Event_1h0rlom" targetRef="Event_0dgdyn1" />
+    <bpmn:intermediateThrowEvent id="Event_1h0rlom" name="Trigger compensation">
+      <bpmn:incoming>Flow_1vifmww</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fkinki</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_095f7sk" signalRef="Signal_1uk9d09" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:endEvent id="Event_0dgdyn1">
+      <bpmn:incoming>Flow_1fkinki</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_1ehanv5" name="Graceful_Shutdown" />
+  <bpmn:signal id="Signal_1uk9d09" name="ShutDown_#{execution.processBusinessKey}" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ParentProcess">
+      <bpmndi:BPMNEdge id="SequenceFlow_16gzt2m_di" bpmnElement="SequenceFlow_16gzt2m">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="592" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1fp17al_di" bpmnElement="SequenceFlow_1fp17al">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vifmww_di" bpmnElement="Flow_1vifmww">
+        <di:waypoint x="350" y="175" />
+        <di:waypoint x="350" y="240" />
+        <di:waypoint x="392" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fkinki_di" bpmnElement="Flow_1fkinki">
+        <di:waypoint x="428" y="240" />
+        <di:waypoint x="492" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1igx3zj_di" bpmnElement="say-hello">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0x6ir2l_di" bpmnElement="EndEvent_0x6ir2l">
+        <dc:Bounds x="592" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_060gdvw_di" bpmnElement="Event_1h0rlom">
+        <dc:Bounds x="392" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="376" y="265" width="69" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_09me37w_di" bpmnElement="Event_0dgdyn1">
+        <dc:Bounds x="492" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qp9wlm_di" bpmnElement="Event_0l1dgjz">
+        <dc:Bounds x="332" y="139" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="375" y="166" width="50" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
