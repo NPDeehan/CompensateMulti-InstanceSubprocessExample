@@ -11,6 +11,6 @@ The child process executes a ``Send Email`` task while also waiting for a signal
 
 After it's been run the history of the process will look like this - in which gray numbers being tasks that have been executed and orange where they have been canceled.
 
-![ParentCockpit](./screenshots/ParentCockpit.png)
+![ParentCockpit](./screenshots/parentCockpit.png)
 
 ![childCockpit](./screenshots/SubProcessCockpit.png)
