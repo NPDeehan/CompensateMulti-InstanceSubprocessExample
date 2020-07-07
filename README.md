@@ -9,6 +9,8 @@ It also waits for a ``Graceful Shutdown`` message which should trigger the proce
 The child process executes a ``Send Email`` task while also waiting for a signal that might come in from the parent process. If that signal does come in the compensation will be triggered and once that has been successfully compensated the sub process will end.
 ![child](./screenshots/SubProcess.png)
 
-After it's been run the history of the process will look like this - in which gray numbers being taks that hav ebeen executed and orange where they have been canceled.
-![parent](./screenshots/ParentCockpit.png)
-![child](./screenshots/SubProcessCockpit.png)
+After it's been run the history of the process will look like this - in which gray numbers being tasks that have been executed and orange where they have been canceled.
+
+![ParentCockpit](./screenshots/ParentCockpit.png)
+
+![childCockpit](./screenshots/SubProcessCockpit.png)
